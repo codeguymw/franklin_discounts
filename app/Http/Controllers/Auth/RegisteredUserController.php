@@ -35,12 +35,20 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'employee_id' => 'required|string|max:50', // New field
+            'role' => 'required|string|max:255',                           // Validate new field
+            'department' => 'required|string|max:255',                     // Validate new field
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'employee_id' => $request->employee_id, // Save the ID
+            'status' => 'pending', // Force pending status
+            'is_admin' => false,
+            'department' => $request->department,
+            'status' => 'pending', // Forces them into the Admin approval queue
         ]);
 
         event(new Registered($user));

@@ -22,6 +22,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'employee_id',      // Added for ID Card
+        'date_of_birth',    // Added for ID Card
+        'date_of_hire',     // Added for ID Card
+        'company_name', 
+        'role',
+        'status', 
+        'department',           // For the Approval System
+        'is_admin',
     ];
 
     /**

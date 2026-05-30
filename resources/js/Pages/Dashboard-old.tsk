@@ -179,7 +179,7 @@ export default function Dashboard({
 
     // Live Reactive Calculations Engine for Corporate Financial Accountability Totals
     const cumulativeLiveSavings = useMemo(() => {
-        const structuralBaseSavings = 0; // Maintained legacy application baseline
+        const structuralBaseSavings = 42.50; // Maintained legacy application baseline
         const activeApprovedSavings = myRedemptions
             .filter(r => r.status === 'approved')
             .reduce((runningSum, currentItem) => runningSum + (currentItem.amount_saved || 0), 0);
@@ -409,8 +409,7 @@ export default function Dashboard({
                 )}
 
                 {/* Main Content Window Frame */}
-                {/* Main Content Window Frame */}
-            <div className="flex-1 overflow-y-auto pb-24 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                <div className="flex-1 overflow-y-auto pb-24 scrollbar-none">
                     
                     {/* Top Fixed Branded Identity Card */}
                     <div className="bg-[#1e345e] p-6 text-white rounded-b-[2.5rem] shadow-sm relative overflow-hidden transition-all duration-500 min-h-[180px] flex flex-col justify-end">
@@ -479,7 +478,7 @@ export default function Dashboard({
                     {/* HORIZONTAL CATEGORY SCROLLER ROW */}
                     {currentTab === 'home' && (
                         <div className="px-6 pt-4">
-                            <div className="flex gap-2 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
                                 <button 
                                     onClick={() => { setSelectedCategory(null); setSelectedPartnerId(null); }}
                                     className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider whitespace-nowrap transition border-none ${!selectedCategory && !selectedPartnerId ? 'bg-[#48733e]' : 'bg-slate-200/60 text-slate-600 hover:bg-slate-200'}`}
@@ -515,7 +514,7 @@ export default function Dashboard({
                                 {!selectedCategory && !selectedPartnerId && searchQuery === '' && featuredDiscounts.length > 0 && (
                                     <div>
                                         <h3 className="font-black text-[10px] uppercase tracking-widest mb-3 text-slate-400">🔥 Spotlight Specials</h3>
-        <div className="flex gap-4 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                                        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
                                             {featuredDiscounts.filter(d => !hiddenRedeemedIds.includes(d.id)).map(deal => (
                                                 <div 
                                                     key={deal.id} 
@@ -642,8 +641,17 @@ export default function Dashboard({
                                 <div className="space-y-2">
                                     <h3 className="font-black text-[10px] uppercase tracking-widest text-slate-400">Proof Validation Ledger Stream</h3>
                                     {myRedemptions.length === 0 ? (
-                                        <div className="text-center py-10 text-xs font-bold text-slate-400 border border-dashed rounded-2xl bg-white shadow-sm">
-                                            📑 No claims processed yet. Your savings ledger updates automatically upon merchant transactions.
+                                        <div className="space-y-2">
+                                            <div className="bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center">
+                                                <div>
+                                                    <h5 className="font-black text-slate-800 text-xs">Pizzeria Bella</h5>
+                                                    <p className="text-[10px] text-slate-400 font-bold">25% OFF Entire Menu • PIN Verified</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase px-2 py-0.5 rounded-md">Approved</span>
+                                                    <p className="font-black text-slate-700 text-xs mt-1">+$12.55</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     ) : (
                                         myRedemptions.map(log => (
@@ -674,10 +682,9 @@ export default function Dashboard({
                                         {user?.name ? user.name.substring(0, 2) : 'FS'}
                                     </div>
                                     <div>
-                                        <h4 className="font-black text-slate-800 text-base">{user?.name || 'Staff Member'}</h4>
-                                        {/* 👇 Pulls the exact role from the DB, defaults to 'Employee' if empty */}
-                                        <p className="text-xs font-bold text-emerald-600">{user?.role || 'Employee'}</p>
-                                        <p className="text-[10px] text-slate-400 mt-0.5">Contact: {user?.email}</p>
+                                        <h4 className="font-black text-slate-800 text-base">{user?.name || 'Franklin Staff Member'}</h4>
+                                        <p className="text-xs font-bold text-emerald-600">Active Senior Care Specialist</p>
+                                        <p className="text-[10px] text-slate-400 mt-0.5">Contact: {user?.email || 'internal-staff@franklincare.com'}</p>
                                     </div>
                                 </div>
 
@@ -685,9 +692,16 @@ export default function Dashboard({
                                 <div className="bg-white rounded-2xl border border-slate-200/70 divide-y divide-slate-100 overflow-hidden shadow-xs">
                                     <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
                                         <span>Organization Division</span>
-                                        {/* 👇 Pulls the department from the DB, defaults to the company name if empty */}
-                                        <span className="text-slate-400 font-semibold">{user?.department || 'Franklin Care'}</span>
+                                        <span className="text-slate-400 font-semibold">Franklin Senior Services</span>
                                     </div>
+                                    {/* <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
+                                        <span>Benefits Clearance</span>
+                                        <span className="text-emerald-600 uppercase font-black text-[10px] bg-emerald-50 px-2 py-0.5 rounded tracking-wide">Premium Hub Level</span>
+                                    </div> */}
+                                    {/* <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
+                                        <span>System Node Instance</span>
+                                        <span className="text-slate-400 font-mono text-[10px]">fss-prod-node-04</span>
+                                    </div> */}
                                 </div>
 
                                 {/* SECURE DISCONNECTION SESSION SYSTEM LOGOUT BUTTON */}

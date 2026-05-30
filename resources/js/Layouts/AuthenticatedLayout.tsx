@@ -5,175 +5,123 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
-export default function Authenticated({
+export default function AuthenticatedLayout({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const user = usePage().props.auth.user;
-
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const { url } = usePage();
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
+        <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
+            {/* Top Premium Branded Navbar */}
+            <nav className="bg-[#1e345e] text-white border-b border-blue-950 shadow-md sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-16">
+                        
+                        <div className="flex items-center gap-8">
+                            {/* Company Logo Group */}
+                            <Link href="/admin/approvals" className="flex items-center gap-3 group">
+                                <img 
+                                    src="/logo.png" 
+                                    alt="Franklin Care Logo" 
+                                    className="h-10 w-10 object-contain bg-white rounded-xl p-1 transition transform group-hover:scale-105"
+                                    onError={(e) => {
+                                        // Fallback if logo.png isn't in public folder yet
+                                        (e.target as HTMLElement).style.display = 'none';
+                                    }}
+                                />
+                                <div className="leading-tight">
+                                    <span className="font-black text-sm tracking-wider uppercase block text-white">Franklin Care</span>
+                                    <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest block">Perks Admin</span>
+                                </div>
+                            </Link>
+
+                            {/* 📂 Core Navigation Tabs */}
+                            <div className="hidden sm:flex space-x-2">
+                                <Link 
+                                    href={route('admin.approvals')} 
+                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition ${
+                                        url.startsWith('/admin/approvals') 
+                                            ? 'bg-[#48733e] text-white shadow-sm' 
+                                            : 'text-blue-100 hover:bg-white/10'
+                                    }`}
+                                >
+                                    🔒 Registration Queue
+                                </Link>
+                                
+                                <Link 
+                                    href={route('admin.partners')} 
+                                    className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition ${
+                                        url.startsWith('/admin/partners') 
+                                            ? 'bg-[#48733e] text-white shadow-sm' 
+                                            : 'text-blue-100 hover:bg-white/10'
+                                    }`}
+                                >
+                                    🏢 Enterprise Control Hub
                                 </Link>
                             </div>
+                        </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                        {/* Right Profile Actions Dropdown */}
+                        <div className="hidden sm:flex sm:items-center">
+                            <div className="relative flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-2xl border border-white/10">
+                                <div className="text-right">
+                                    <p className="text-xs font-black text-white">{user.name}</p>
+                                    <p className="text-[9px] text-emerald-400 font-bold uppercase">System Admin</p>
+                                </div>
+                                <Link 
+                                    href={route('logout')} 
+                                    method="post" 
+                                    as="button" 
+                                    className="text-xs bg-red-600/80 hover:bg-red-600 px-2.5 py-1 rounded-lg font-bold transition uppercase tracking-wide text-white ml-2"
                                 >
-                                    Dashboard
-                                </NavLink>
+                                    Exit 🚪
+                                </Link>
                             </div>
                         </div>
 
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
-
+                        {/* Mobile Navigation Toggle Button */}
                         <div className="-me-2 flex items-center sm:hidden">
                             <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                onClick={() => setShowingNavigationDropdown(!showingNavigationDropdown)}
+                                className="inline-flex items-center justify-center p-2 rounded-xl text-blue-200 hover:bg-white/10 focus:outline-none transition"
                             >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
+                                <span className="text-xl">{showingNavigationDropdown ? '✕' : '☰'}</span>
                             </button>
                         </div>
+
                     </div>
                 </div>
 
-                <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
-                    }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
-                        </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
+                {/* Mobile Slide-down Drawer Matrix */}
+                <div className={`${showingNavigationDropdown ? 'block' : 'hidden'} sm:hidden bg-[#1e345e] border-t border-blue-950 px-4 py-3 space-y-2`}>
+                    <Link 
+                        href={route('admin.approvals')}
+                        className={`block w-full p-3 rounded-xl text-xs font-bold uppercase tracking-wider ${url.startsWith('/admin/approvals') ? 'bg-[#48733e]' : 'text-white'}`}
+                    >
+                        🔒 Registration Queue
+                    </Link>
+                    <Link 
+                        href={route('admin.partners')}
+                        className={`block w-full p-3 rounded-xl text-xs font-bold uppercase tracking-wider ${url.startsWith('/admin/partners') ? 'bg-[#48733e]' : 'text-white'}`}
+                    >
+                        🏢 Enterprise Control Hub
+                    </Link>
+                    <Link 
+                        method="post" 
+                        href={route('logout')} 
+                        as="button" 
+                        className="block w-full text-left p-3 rounded-xl text-xs font-bold uppercase text-red-400 bg-red-950/20"
+                    >
+                        Log Out System
+                    </Link>
                 </div>
             </nav>
 
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
-                </header>
-            )}
-
-            <main>{children}</main>
+            {/* Injected Screen Panel Body */}
+            <main className="animate-fadeIn">{children}</main>
         </div>
     );
 }

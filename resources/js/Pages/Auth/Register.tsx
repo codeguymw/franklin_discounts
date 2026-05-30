@@ -10,8 +10,11 @@ export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
+        employee_id: '',
         password: '',
         password_confirmation: '',
+        role: '',        // Add this
+        department: '',  // Add this
     });
 
     const submit: FormEventHandler = (e) => {
@@ -59,6 +62,56 @@ export default function Register() {
                     />
 
                     <InputError message={errors.email} className="mt-2" />
+                </div>
+
+                {/* its me putting here gemini wanted to put it o las div */}
+                <div className="mt-4">
+                    <InputLabel htmlFor="employee_id" value="Employee ID Number" />
+
+                    <TextInput
+                        id="employee_id"
+                        name="employee_id"
+                        value={data.employee_id}
+                        className="mt-1 block w-full"
+                        autoComplete="username"
+                        isFocused={true}
+                        onChange={(e) => setData('employee_id', e.target.value)}
+                        required
+                    />
+
+                    <InputError message={errors.employee_id} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="role" value="Job Title / Role" />
+                    <TextInput
+                        id="role"
+                        name="role"
+                        value={data.role}
+                        className="mt-1 block w-full"
+                        placeholder="e.g., Senior Care Specialist"
+                        onChange={(e) => setData('role', e.target.value)}
+                        required
+                    />
+                    <InputError message={errors.role} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="department" value="Department / Facility" />
+                    <select
+                        id="department"
+                        name="department"
+                        value={data.department}
+                        className="mt-1 block w-full border-gray-300 focus:border-[#1e345e] focus:ring-[#1e345e] rounded-md shadow-sm"
+                        onChange={(e) => setData('department', e.target.value)}
+                        required
+                    >
+                        <option value="" disabled>Select your facility...</option>
+                        <option value="Franklin Senior Services">Franklin Senior Services</option>
+                        <option value="Franklin Home Care">Franklin Home Care</option>
+                        <option value="Head Office">Head Office</option>
+                    </select>
+                    <InputError message={errors.department} className="mt-2" />
                 </div>
 
                 <div className="mt-4">

@@ -19,6 +19,12 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->string('employee_id')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->date('date_of_hire')->nullable();
+            $table->string('company_name')->default('Franklin Care');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->boolean('is_admin')->default(false);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
