@@ -31,24 +31,32 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // 1. Validate ALL incoming fields from the React form
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'employee_id' => 'required|string|max:50',
+            'company_name' => 'required|string|max:255', 
+            'department' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'date_of_hire' => 'required|date',           
+            'date_of_birth' => 'required|date',          
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'employee_id' => 'required|string|max:50', // New field
-            'role' => 'required|string|max:255',                           // Validate new field
-            'department' => 'required|string|max:255',                     // Validate new field
         ]);
 
+        // 2. Save EVERYTHING securely to the database
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'employee_id' => $request->employee_id, // Save the ID
-            'status' => 'pending', // Force pending status
-            'is_admin' => false,
+            'employee_id' => $request->employee_id,
+            'company_name' => $request->company_name,   
             'department' => $request->department,
+            'role' => $request->role,                   
+            'date_of_hire' => $request->date_of_hire,   
+            'date_of_birth' => $request->date_of_birth, 
             'status' => 'pending', // Forces them into the Admin approval queue
+            'is_admin' => false,
         ]);
 
         event(new Registered($user));

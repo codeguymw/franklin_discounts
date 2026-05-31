@@ -15,6 +15,18 @@ interface Discount {
     estimated_savings?: number;
 }
 
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    role?: string;
+    department?: string;
+    employee_id?: string;
+    company_name?: string;
+    date_of_hire?: string;
+    date_of_birth?: string;
+}
+
 interface Category { id: number; name: string; icon_emoji: string; }
 
 interface Redemption {
@@ -178,23 +190,28 @@ export default function Dashboard({
     };
 
     // Live Reactive Calculations Engine for Corporate Financial Accountability Totals
-    const cumulativeLiveSavings = useMemo(() => {
-        const structuralBaseSavings = 0; // Maintained legacy application baseline
-        const activeApprovedSavings = myRedemptions
-            .filter(r => r.status === 'approved')
-            .reduce((runningSum, currentItem) => runningSum + (currentItem.amount_saved || 0), 0);
-            
-        return (structuralBaseSavings + activeApprovedSavings).toFixed(2);
-    }, [myRedemptions]);
+   const cumulativeLiveSavings = useMemo(() => {
+    const structuralBaseSavings = 0; // Maintained legacy application baseline
+    
+    const activeApprovedSavings = myRedemptions
+        .filter(r => r.status === 'approved')
+        .reduce((runningSum, currentItem) => {
+            // Use parseFloat to force math instead of string-gluing
+            const savedAmount = Number(currentItem.amount_saved) || 0;
+            return runningSum + savedAmount;
+        }, 0);
+        
+    return (structuralBaseSavings + activeApprovedSavings).toFixed(2);
+}, [myRedemptions]);
 
-    // Extract unique partners from all available discounts for our dynamic brand directory list
-    const uniquePartners = Array.from(
-        new Map(
-            allDiscounts
-                .filter(d => d.partner)
-                .map(d => [d.partner!.id, d.partner!])
-        ).values()
-    );
+// Extract unique partners from all available discounts for our dynamic brand directory list
+const uniquePartners = Array.from(
+    new Map(
+        allDiscounts
+            .filter(d => d.partner)
+            .map(d => [d.partner!.id, d.partner!])
+    ).values()
+);
 
     // Live Search & Category Filter logic engine
     const processedListings = allDiscounts.filter(deal => {
@@ -675,7 +692,7 @@ export default function Dashboard({
                                     </div>
                                     <div>
                                         <h4 className="font-black text-slate-800 text-base">{user?.name || 'Staff Member'}</h4>
-                                        {/* 👇 Pulls the exact role from the DB, defaults to 'Employee' if empty */}
+                                        {/* Pulls the exact role from the DB, defaults to 'Employee' if empty */}
                                         <p className="text-xs font-bold text-emerald-600">{user?.role || 'Employee'}</p>
                                         <p className="text-[10px] text-slate-400 mt-0.5">Contact: {user?.email}</p>
                                     </div>
@@ -683,11 +700,37 @@ export default function Dashboard({
 
                                 {/* Security and Organizational Parameters Table */}
                                 <div className="bg-white rounded-2xl border border-slate-200/70 divide-y divide-slate-100 overflow-hidden shadow-xs">
+                                    
+                                    {/* 1. Employee ID (NEW) */}
+                                    <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
+                                        <span>Employee ID Number</span>
+                                        <span className="text-slate-500 font-mono bg-slate-50 px-2 py-0.5 rounded border">{user?.employee_id || 'Pending Issuance'}</span>
+                                    </div>
+
+                                    {/* 2. Company Name (NEW) */}
+                                    <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
+                                        <span>Operating Company</span>
+                                        <span className="text-slate-500 font-semibold">{user?.company_name || 'Franklin Network'}</span>
+                                    </div>
+
+                                    {/* 3. Department (EXISTING) */}
                                     <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
                                         <span>Organization Division</span>
-                                        {/* 👇 Pulls the department from the DB, defaults to the company name if empty */}
-                                        <span className="text-slate-400 font-semibold">{user?.department || 'Franklin Care'}</span>
+                                        <span className="text-slate-500 font-semibold">{user?.department || 'Franklin Care'}</span>
                                     </div>
+
+                                    {/* 4. Date of Hire (NEW) */}
+                                    <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
+                                        <span>Date of Hire</span>
+                                        <span className="text-slate-500 font-semibold">{user?.date_of_hire || 'N/A'}</span>
+                                    </div>
+
+                                    {/* 5. Date of Birth (NEW) */}
+                                    <div className="p-4 flex justify-between items-center text-xs font-bold text-slate-700">
+                                        <span>Date of Birth</span>
+                                        <span className="text-slate-500 font-semibold">{user?.date_of_birth || 'N/A'}</span>
+                                    </div>
+
                                 </div>
 
                                 {/* SECURE DISCONNECTION SESSION SYSTEM LOGOUT BUTTON */}
