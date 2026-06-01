@@ -664,16 +664,18 @@ const uniquePartners = Array.from(
                                         </div>
                                     ) : (
                                         myRedemptions.map(log => (
-                                            <div key={log.id} className="bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center">
-                                                <div>
-                                                    <h5 className="font-black text-slate-800 text-xs">{log.discount?.partner?.name || 'Partner Business'}</h5>
-                                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{log.discount?.title} • {log.verification_method === 'vendor_pin' ? 'PIN Verified' : 'Receipt Upload'}</p>
-                                                </div>
-                                                <div className="text-right">
-                                                    <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${log.status === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>{log.status === 'pending' ? 'pending audit' : log.status}</span>
-                                                    <p className="font-black text-slate-700 text-xs mt-1">${(log.amount_saved || 0).toFixed(2)}</p>
-                                                </div>
+                                        <div key={log.id} className="bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center">
+                                            <div>
+                                                <h5 className="font-black text-slate-800 text-xs">{log.discount?.partner?.name || 'Partner Business'}</h5>
+                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{log.discount?.title} • {log.verification_method === 'vendor_pin' ? 'PIN Verified' : 'Receipt Upload'}</p>
                                             </div>
+                                            <div className="text-right">
+                                                <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-md ${log.status === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>{log.status === 'pending' ? 'pending audit' : log.status}</span>
+                                                
+                                                {/* ✅ THE FIX IS ON THE LINE BELOW */}
+                                                <p className="font-black text-slate-700 text-xs mt-1">${Number(log.amount_saved || 0).toFixed(2)}</p>
+                                            </div>
+                                        </div>
                                         ))
                                     )}
                                 </div>
